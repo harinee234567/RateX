@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter Pro</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Main Container -->
+  <div class="container" id="mainView">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <button class="icon-btn" id="homeBtn" title="Home">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </button>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn" id="settingsBtn" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.84 4.84l-4.24 4.24M23 12h-6m-6 0H1m15.66 8.66l-4.24-4.24m-4.84-4.84l-4.24-4.24"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="expandBtn" title="Expand">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Extension Toggle -->
+    <div class="toggle-section">
+      <div class="toggle-label">
+        <span>Extension Status</span>
+        <span class="status-text" id="statusText">Active</span>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="extensionToggle" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <!-- Manual Mode Section -->
+    <div id="manualModeSection" style="display: none;">
+      <div class="section-title">Quick Converter</div>
+      
+      <div class="amount-input-wrapper">
+        <input type="text" id="manualAmount" class="amount-input" placeholder="Enter amount">
+      </div>
+
+      <!-- Base Currency Selection -->
+      <div class="currency-card" id="manualBaseCurrency">
+        <div class="currency-icon">
+          <img src="" alt="" id="manualBaseFlag">
+        </div>
+        <div class="currency-info">
+          <div class="currency-code" id="manualBaseCode">USD</div>
+          <div class="currency-name" id="manualBaseName">United States Dollar</div>
+        </div>
+        <button class="change-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Swap Button -->
+      <div class="swap-btn-wrapper">
+        <button class="swap-btn" id="swapCurrencies" title="Swap currencies">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Target Currency Selection -->
+      <div class="currency-card" id="manualTargetCurrency">
+        <div class="currency-icon">
+          <img src="" alt="" id="manualTargetFlag">
+        </div>
+        <div class="currency-info">
+          <div class="currency-code" id="manualTargetCode">EUR</div>
+          <div class="currency-name" id="manualTargetName">Euro</div>
+        </div>
+        <button class="change-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Conversion Result -->
+      <div class="conversion-result" id="conversionResult">
+        <span class="result-value" id="resultValue">0.00</span>
+      </div>
+    </div>
+
+    <!-- Auto Mode Section -->
+    <div id="autoModeSection">
+      <div class="section-title">Target Currency</div>
+      
+      <!-- Current Target Currency -->
+      <div class="currency-card primary" id="targetCurrencyCard">
+        <div class="currency-icon">
+          <img src="" alt="" id="targetFlag">
+        </div>
+        <div class="currency-info">
+          <div class="currency-code" id="targetCode">USD</div>
+          <div class="currency-name" id="targetName">United States Dollar</div>
+          <div class="currency-rate" id="targetRate">1 USD = 1.00 USD</div>
+        </div>
+        <button class="change-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Pinned Currencies -->
+      <div class="section-title" style="margin-top: 20px;">
+        <span>Quick Access</span>
+        <button class="text-btn" id="managePinsBtn">Manage</button>
+      </div>
+      
+      <div class="pinned-currencies" id="pinnedCurrencies">
+        <!-- Pinned currency cards will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Batch Conversion Section (Hidden by default) -->
+    <div id="batchModeSection" style="display: none;">
+      <div class="section-title">Batch Conversion</div>
+      <div class="batch-input-area">
+        <textarea id="batchInput" placeholder="Enter amounts with currencies (e.g., $100, €50, ¥1000)" rows="4"></textarea>
+        <button class="primary-btn" id="convertBatchBtn">Convert All</button>
+      </div>
+      <div id="batchResults" class="batch-results"></div>
+    </div>
+  </div>
+
+  <!-- Currency Search View -->
+  <div class="container" id="searchView" style="display: none;">
+    <div class="header">
+      <button class="icon-btn" id="backBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <span class="header-title" id="searchViewTitle">Select Currency</span>
+    </div>
+
+    <div class="search-wrapper">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="currencySearch" class="search-input" placeholder="Click to search">
+    </div>
+
+    <div class="currency-list" id="currencyList">
+      <!-- Currency list items will be inserted here -->
+    </div>
+  </div>
+
+  <!-- Settings View -->
+  <div class="container" id="settingsView" style="display: none;">
+    <div class="header">
+      <button class="icon-btn" id="settingsBackBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <span class="header-title">Settings</span>
+    </div>
+
+    <div class="settings-content">
+      <!-- Conversion Mode -->
+      <div class="setting-group">
+        <div class="setting-label">Conversion Mode</div>
+        <div class="mode-tabs">
+          <button class="mode-tab active" data-mode="auto">Auto Detect</button>
+          <button class="mode-tab" data-mode="selection">Selection</button>
+          <button class="mode-tab" data-mode="manual">Manual</button>
+        </div>
+      </div>
+
+      <!-- Default Base Currency -->
+      <div class="setting-item" id="baseSettingItem">
+        <div class="setting-info">
+          <div class="setting-title">Default Base Currency</div>
+          <div class="setting-desc">Set default currency for conversions</div>
+        </div>
+        <div class="setting-value" id="baseCurrencyValue">USD</div>
+      </div>
+
+      <!-- Rounding Settings -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-title">Decimal Places</div>
+          <div class="setting-desc">Number of decimal places to show</div>
+        </div>
+        <select class="setting-select" id="decimalPlaces">
+          <option value="0">0</option>
+          <option value="2" selected>2</option>
+          <option value="4">4</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+
+      <!-- Offset Setting -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-title">Rate Adjustment (%)</div>
+          <div class="setting-desc">Add custom margin to conversion rates</div>
+        </div>
+        <input type="number" class="setting-input" id="rateOffset" placeholder="0" step="0.1" min="-10" max="10">
+      </div>
+
+      <!-- Toggle Settings -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-title">Dark Mode</div>
+          <div class="setting-desc">Use dark theme for better visibility</div>
+        </div>
+        <label class="toggle small">
+          <input type="checkbox" id="darkModeToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-title">Auto-Update Rates</div>
+          <div class="setting-desc">Refresh rates automatically</div>
+        </div>
+        <label class="toggle small">
+          <input type="checkbox" id="autoUpdateToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-title">No Tracking Mode</div>
+          <div class="setting-desc">Disable analytics and tracking</div>
+        </div>
+        <label class="toggle small">
+          <input type="checkbox" id="noTrackingToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="setting-actions">
+        <button class="action-btn" id="clearCacheBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          Clear Cache
+        </button>
+        <button class="action-btn" id="updateRatesBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+          </svg>
+          Update Rates Now
+        </button>
+      </div>
+
+      <!-- Cache Info -->
+      <div class="cache-info">
+        <div class="cache-item">
+          <span>Last Updated:</span>
+          <span id="lastUpdateTime">Never</span>
+        </div>
+        <div class="cache-item">
+          <span>Cached Currencies:</span>
+          <span id="cachedCount">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="currencies.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
