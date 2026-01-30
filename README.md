@@ -1,4 +1,4 @@
-# Currency Converter Pro
+# RateX
 
 Currency Converter Pro is a modern Chrome extension for fast and intelligent currency conversion. It supports multiple conversion modes, over 150 currencies (including cryptocurrencies), and features a clean, dark-themed interface.
 
